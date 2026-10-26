@@ -626,37 +626,37 @@
  
 <h3>Terminal</h3>
 <span class="expr">Terminal(<u>id_terminal</u>, nome, ativo)</span>
-<div class="w">
-    <table>
-        <tr>
-            <th>Atributo</th>
-            <th>Tipo</th>
-            <th>Nulo</th>
-            <th>Chave</th>
-            <th>Descrição / valores</th>
-        </tr>
-        <tr>
-            <td>id_terminal</td><td>Inteiro</td>
-            <td>N</td>
-            <td>PK</td>
-            <td>Identificador único</td>
-        </tr>
-        <tr>
-            <td>nome</td>
-            <td>Enum</td>
-            <td>N</td>
-            <td></td>
-            <td>Caixa_Salao, Caixa_Delivery</td>
-        </tr>
-        <tr>
-            <td>ativo</td>
-            <td>Booleano</td>
-            <td>N</td>
-            <td></td>
-            <td>Terminal em uso (RN05)</td>
-        </tr
-    </table>
-</div>
+    <div class="w">
+        <table>
+            <tr>
+                <th>Atributo</th>
+                <th>Tipo</th>
+                <th>Nulo</th>
+                <th>Chave</th>
+                <th>Descrição / valores</th>
+            </tr>
+            <tr>
+                <td>id_terminal</td><td>Inteiro</td>
+                <td>N</td>
+                <td>PK</td>
+                <td>Identificador único</td>
+            </tr>
+            <tr>
+                <td>nome</td>
+                <td>Enum</td>
+                <td>N</td>
+                <td></td>
+                <td>Caixa_Salao, Caixa_Delivery</td>
+            </tr>
+            <tr>
+                <td>ativo</td>
+                <td>Booleano</td>
+                <td>N</td>
+                <td></td>
+                <td>Terminal em uso (RN05)</td>
+            </tr
+        </table>
+    </div>
  
 <h3>Caixa</h3>
 <span class="expr">Caixa(<u>id_caixa</u>, #id_terminal, #id_funcionario, data_abertura, data_fechamento, fundo_reserva, saldo_final_calculado, saldo_final_informado, diferenca, status_caixa)</span>
