@@ -1,12 +1,21 @@
 # **Entrega 2: Modelagem de Banco de Dados**
 
-**Sistema de Gestão de Informações – Mont Ararat Burger House**
+*Sistema de Gestão de Informações – Mont Ararat Burger House*
 
 
-** Integrantes do Grupo (Nomes e RGMs):**   
-* – Gustavo Almeida de Lima, RGM: 48157899  
-* – Mariana Brito Farias, RGM: 48134767   
-* – Ynaê Ribeiro da Silva, RGM: 47987111
+Integrantes do Grupo (Nomes e RGMs):
+
+**Gustavo Almeida de Lima**
+- RGM: 48157899
+- GitHub: https://github.com/Veigasz
+
+**Mariana Brito Farias**
+- RGM: 48134767
+- GitHub: https://github.com/maru8liana
+
+**Ynaê Ribeiro da Silva**
+- RGM: 47987111
+- GitHub: https://github.com/Yna-ribe
 
 -------------------------------------------------------------------------
 # **1\. Caracterização da Organização**
@@ -77,30 +86,122 @@ A Mont Ararat Burger House é uma rede regional de hamburguerias artesanais. Cla
 
 # **Escopo do Sistema**
 
+O presente projeto tem como escopo o desenvolvimento de um modelo de banco de dados relacional integrado para abranger o ecossistema informacional da hamburgueria artesanal referente. Diferente de soluções parciais voltadas a um único setor, o sistema foi concebido para centralizar e gerenciar de forma unificada todos os dados gerados pela organização.
+
+A abrangência do sistema contempla três grandes módulos operacionais interconectados:
+
+Módulo de Vendas (Comercial): Abrange o controle completo de atendimento ao cliente, seja via salão (comandas e mesas), balcão ou canais de delivery. Inclui também o registro de pedidos fracionados, formas de pagamento, controle e auditoria de cancelamentos de itens e a gestão dinâmica do cardápio e precificação de produtos e adicionais.
+
+Módulo de Compras (Suprimentos): Gerencia todo o relacionamento com fornecedores de insumos (carnes, pães, hortifrúti, bebidas e embalagens), automatiza a geração de listas de compras baseadas na necessidade operacional e registra formalmente o recebimento e conferência de mercadorias.
+
+Módulo de Apoio e Gestão (Retaguarda): Envolve o controle de estoque em tempo real (com baixa automatizada por fichas técnicas), o registro de pré-preparo de insumos, a abertura e operação de caixas por terminal, o controle financeiro de fechamento de turnos (sangrias e suprimentos) e o gerenciamento da escala de funcionários e colaboradores freelancers.
+
+Fora do Escopo: Ficam excluídos do escopo deste projeto módulos de contabilidade fiscal externa (apuração de tributos federais/estaduais complexos) e sistemas de folha de pagamento e encargos trabalhistas de RH, visto que o foco reside na operação comercial, logística de insumos e controle financeiro interno da hamburgueria.
+
+
+-------------------------------------------------------------------------
 
 # **Justificativa da Escolha**
 
 A escolha da unidade São Mateus da Mont Ararat Burger House justifica-se pelo acesso direto e irrestrito do grupo às rotinas operacionais (um dos integrantes é colaborador do local). O ambiente apresenta complexidade ideal para modelagem de dados: possui volumetria rica (30 mesas, 2 caixas, múltiplos turnos e ficha técnica artesanal) sem exceder o escopo da disciplina.
 
 -------------------------------------------------------------------------
-# **2. Processos de Negócio**
+# **Processos de Negócio**
 
 ### **Principais Processos Mapeados**
-* **Pré-preparo e Produção de Insumos (Turno da Manhã)**: Manipulação de insumos artesanais (moagem de carnes de 180g e 120g, preparo de molhos da casa, corte de vegetais, porcionamento).
-* **Abertura e Operação de Caixa:** Abertura de sessões por terminal (Salão/Delivery) com registro de fundo de reserva (R$150,00) e atribuição de operador.
+
+
 * **Atendimento de Salão e Gestão de Comandas**: Abertura de comanda associada à mesa, lançamento progressivo de itens por garçom e controle de transferência entre mesas.
 * **Pedido de Delivery e Balcão:** Processo voltado para o atendimento de clientes que compram para retirada no balcão, via 99 (Aplicativo de Delivery) ou  por WhatsApp. Envolve o registro dos dados do cliente (no caso de delivery), escolha de produtos, cálculo automático da taxa de entrega baseada no endereço ou seleção de retirada, escolha da forma de pagamento online ou na entrega, e o direcionamento imediato do pedido para a fila de produção da cozinha, integrando-se ao controle de expedição e entrega.
 * **Cancelamento de Item ou de Pedido:** Fluxo de exceção que rege o cancelamento de itens já lançados em comandas ou de pedidos completos. Exige a identificação do operador responsável e justificativa obrigatória para a administradora do caixa do dia respectivo. O sistema deve registrar o evento para fins de auditoria de estoque (estornando os insumos utilizados se aplicável) e controle gerencial de perdas.
+* **Fechamento de Conta e Recebimento Fracionado**: Consolidação do consumo, aplicação/isenção opcional da taxa de serviço de 10%, registros de pagamentos fracionados (N formas de pagamento) e encerramento da comanda com liberação da mesa.
 * **Gestão do Cardápio e Preços:** Processo administrativo responsável pela criação, alteração e descontinuação de produtos, categorias (lanches, bebidas, acompanhamentos) e ingredientes adicionais. Permite a definição de preços vigentes, controle de disponibilidade de itens em tempo real (esgotar produto) e parametrização de combos ou promoções aplicáveis aos canais de venda (salão, balcão e delivery).
 * **Cardapio**:
 <img width="300" height="400" alt="WhatsApp Image 2026-10-26 at 09 47 25" src="https://github.com/user-attachments/assets/582071cb-4771-4d7c-82e3-d9c1afa14fab" />
 <img width="300" height="400" alt="WhatsApp Image 2026-10-26 at 09 47 25 (1)" src="https://github.com/user-attachments/assets/b4d9b61c-e444-4abe-a445-68658e29cfaf" />
 
-* **Cadastro de fornecedores**: Atualmente o Cadastro de fornecedores é ausente na Empresa entretanto possui seus fornecedores fixos para certos produtos (Carne, pães, hortifrúti e bebidas). Deve-se Armazena dados cadastrais, CNPJ, prazos de entrega negociados, formas de pagamento e os insumos específicos fornecidos por cada parceiro comercial.
+* **Cadastro de fornecedores**: Processo de registro e manutenção da base de parceiros comerciais da hamburgueria (fornecedores de carne, pães, hortifrúti, bebidas e embalagens). Armazena dados cadastrais, CNPJ, prazos de entrega negociados, formas de pagamento e os insumos específicos fornecidos por cada parceiro.
 * **Compra de Insumos (Geração de Pedidos de Compra:)** Processo periódico de análise de estoque mínimo e projeção de demanda para a geração de listas de compras. Com base nas baixas operacionais e no saldo atual de insumos, o sistema auxilia na criação de ordens de compra a serem enviadas aos fornecedores cadastrados, prevenindo rupturas na produção.
 * **Recebimento e Conferência da Mercadoria:** Processo físico e lógico de entrada de insumos no estabelecimento. No momento da entrega pelo fornecedor, os produtos são conferidos quantitativa e qualitativamente em relação à nota fiscal e ao pedido de compra original, registrando-se a entrada oficial dos lotes no estoque e atualizando os custos unitários dos insumos.
-* **Controle de Estoque:** Gestão contínua das entradas, saídas e saldos de insumos e produtos acabados. O sistema realiza a baixa automática de estoque com base na ficha técnica dos itens vendidos (ex: a venda de um hambúrguer desconta pão, carne, queijo e embalagem), além de permitir ajustes manuais para perdas, desperdícios, quebras e contagens periódicas de inventário físico.
-* **Escala de Funcionários e Freelancers:** Processo de organização e planejamento da jornada de trabalho da equipe da hamburgueria (chapa, atendimento, caixa). Permite o registro de turnos fixos dos colaboradores CLT e o cadastro/alocação de freelancers para dias de maior movimento, controlando horários de entrada, saída e custos operacionais de mão de obra. Freelancers que trabalham no Turno matutino Entram as 8, e são liberados as 15 e30, Freelancers que Trabalham no turno Integral/Noturno, Entram a partir das 16 e 30 (Ou 15 e 3 com direito a 1 hora de almoço) São liberados as 23:30 em dias úteis e 00:30 em Finais de semana.
+* **Escala de Funcionários e Freelancers:** Processo de organização e planejamento da jornada de trabalho da equipe (chapa, atendimento, garçom, auxiliar de cozinha e caixa). Permite o registro de turnos fixos dos colaboradores CLT e a alocação de freelancers para dias de maior movimento, controlando horários de entrada, saída, intervalo de almoço (1 hora) e custos operacionais de mão de obra para os turnos matutino, integral e noturno.
 * **Produção na Cozinha (Chapa/Montagem)**: Recebimento dos itens de pedidos fracionados por comanda, controle de observações (ponto de carne, remoção de itens)
-* **Fechamento de Conta e Recebimento Fracionado**: Consolidação do consumo, aplicação/isenção opcional da taxa de serviço de 10%, registros de pagamentos fracionados (N formas de pagamento) e encerramento da comanda com liberação da mesa.
+* **Abertura e Operação de Caixa:** Abertura de sessões por terminal (Salão/Delivery) com registro de fundo de reserva (R$150,00) e atribuição de operador.
+* **Pré-preparo e Produção de Insumos (Turno da Manhã)**: Manipulação de insumos artesanais (moagem de carnes de 180g e 120g, preparo de molhos da casa, corte de vegetais, porcionamento).
+* **Controle de Estoque:** Gestão contínua das entradas, saídas e saldos de insumos e produtos acabados. O sistema realiza a baixa automática de estoque com base na ficha técnica dos itens vendidos (ex: a venda de um hambúrguer desconta pão, carne, queijo e embalagem), além de permitir ajustes manuais para perdas, desperdícios, quebras e contagens periódicas de inventário físico.
 * **Controle Financeiro e Fechamento de Turno**: Apuração das entradas por meio de pagamento, registro de sangrias/suprimentos, conferência de divergências de caixa e fechamento do turno.
+
+### **Justificativa:**
+Para garantir a máxima aderência à realidade do mercado, utilizamos Inteligência Artificial (Gemini) em uma pesquisa de benchmarking para mapear os processos padrão de uma hamburgueria artesanal:
+
+Processos Incluídos (100% das áreas operacionais): Optamos por contemplar a totalidade dos fluxos de Vendas, Compras e Apoio/Gestão (incluindo Fornecedores, Recebimento, Cancelamentos e Escala de Freelancers). Essa abordagem garante a baixa automática de estoque via ficha técnica, a rastreabilidade financeira e a auditoria completa no SGBD.
+
+Única Exceção (Fora do Escopo): O processo de Marketing e Relacionamento com o Cliente (redes sociais e avaliações em plataformas como iFood e Instagram) foi mantido fora do banco de dados relacional por ser executado em ferramentas de terceiros e não gerar transações estruturadas diretas no sistema principal da empresa.
+
+-------------------------------------------------------------------------
+
+# Requisitos:
+
+**Requisitos Funcionais** (o que o sistema deve fazer?)
+
+| Identificador | Descrição De... | Prioridade | 
+|---------------|-----------------|------------|
+| **RF01** | Gestão de Mesas e Comandas: O sistema deve permitir cadastrar e visualizar o status das 30 mesas (Livre, Ocupada, Aguardando Pagamento) e abrir/fechar comandas associadas a elas. | Alta |
+| **RF02** | Registro de Pedidos: O sistema deve permitir o lançamento de itens de pedido vinculados a uma comanda, com escolha de produtos, quantidade, observações personalizadas e gravação do preço unitário praticado. | Alta | 
+| **RF03** | Gestão de Pedidos de Delivery e Balcão: O sistema deve cadastrar pedidos vindos do balcão ou canais digitais (WhatsApp, apps), Coletando dados do cliente, endereço e taxa de entrega. | Alta |
+| **RF04** | Cadastro Cliente: O sistema deve permitir cadastrar cliente com nome completo, CPF, telefone e endereço (logradouro, número, bairro, CEP) | Média |
+| **RF05** | Divisão de Pagamento: O sistema deve permitir registrar múltiplos pagamentos parciais para uma mesma comanda, suportando diferentes formas de pagamento (Dinheiro, Cartão, PIX) até quitar o valor total. | Alta | 
+| **RF06** | Gestão da Taxa de Serviço: O sistema deve aplicar automaticamente a taxa de serviço de 10% sobre o subtotal da comanda, permitindo sua remoção manual mediante autorização do cliente. | Média | 
+| **RF07** | Gestão do Cardápio e Preços: O sistema deve permitir cadastrar, alterar preços, categorizar produtos e pausar a venda de itens esgotados em tempo real. | Alta | 
+| **RF08** | Controle de Sessão de Caixa: O sistema deve permitir a abertura de caixa informando o valor inicial (fundo de reserva - R$150,00) e o fechamento do caixa com o cálculo automático de diferenças entre o valor esperado e o valor informado. | Alta | 
+| **RF09** | Ficha Técnica dos Produtos: O sistema deve permitir associar cada item do cardápio a uma ficha técnica estruturada, detalhando a quantidade exata de cada insumo utilizado (ex: 1 pão, 180g de carne, 2 fatias de queijo).| Alta| 
+| **RF10** | Cancelamento de Itens e Pedidos: O sistema deve permitir o cancelamento de itens ou pedidos completos e registrar cada realizado | Alta |
+| **RF11** | Cadastro de Fornecedores: O sistema deve permitir o registro, alteração e consulta de fornecedores de insumos (carnes, pães, hortifrúti, bebidas e embalagens), armazenando dados cadastrais, CNPJ, prazos e insumos fornecidos. | Média |
+| **RF12** | Entrada de Mercadorias: O sistema deve registrar a entrada de novos lotes de insumos via conferência de nota fiscal ou pedido de compra, atualizando saldo e custo unitário. | Alta | 
+| **RF13** | Baixa Automática de Estoque: O sistema deve realizar a baixa de matérias-primas no estoque de forma automática ao concluir a venda de um produto, utilizando sua ficha técnica. | Alta | 
+| **RF14** | Registro de Escala e Horários: O sistema deve permitir o cadastro de turnos e a alocação da equipe fixa e de colaboradores freelancers por dia/horário.| Baixa | 
+
+
+
+-----------------------------
+
+**Requisitos Não Funcionais** (tipicamente, restrições a serem obedecidas em relação a: segurança, portabilidade, desempenho, usabilidade,
+interoperabilidade…)
+
+| Identificador | Descrição De... | Prioridade | 
+|---------------|-----------------|------------|
+| **RNF01** | Disponibilidade: O sistema deve apresentar disponibilidade contínua de 99,5% durante o horário de funcionamento do estabelecimento (terça a domingo, das 18h às 00h) | Alta | 
+| **RNF02** | Desempenho: O tempo de resposta para o lançamento de pedidos e impressão/envio para a cozinha não deve exceder 2 segundos em pico operacional. | Média |
+| **RNF03** | Usabilidade e Acessibilidade Operacional: A interface de lançamento deve ser otimizada para terminais touch e dispositivos móveis dos garçons no salão. | Média |
+| **RNF04** | Integridade Referencial no SGBD: O banco de dados deve garantir a integridade referencial de forma que a exclusão de um produto do cardápio não apague o histórico de vendas antigas associadas a ele. | Alta |
+| **RNF05** | Rastreabilidade e Auditoria: Todas as operações de cancelamento, alteração de preço, desconto e sangria de caixa devem registrar um log auditável contendo data, hora, usuário e motivo. | Média |
+
+### **Justificativa:**
+Com base no reestudo do escopo operacional e no benchmarking dos processos de uma hamburgueria artesanal, procedemos à seguinte revisão no conjunto de requisitos do sistema:
+
+Inclusão de Novos Requisitos: Foram adicionados novos Requisitos Funcionais (RFs) e Não Funcionais (RNFs) para cobrir integralmente as crises operacionais apontadas no Trabalho (como cadastro de clientes, fichas técnicas e Fornecedor, compras). Sugestões adicionais levantadas na pesquisa de mercado que possuíam equivalência com os itens já existentes foram descartadas para evitar redundâncias na especificação.
+
+Refinamento e Adequação de Escopo: O requisito de transferência de mesas foi descontinuado do escopo principal, visto que o foco da modelagem relacional prioriza as transações estruturais de persistência (vendas, caixa, controle de estoque e financeiro), otimizando a abrangência do banco de dados.
+
+-----------------------------
+
+## **Regras de Negócio** (regras que devem ser obedecidas pelo sistema)
+
+| Identificador | Descrição de.. | Prioridade |
+|---------------|-----------------|-----------|
+| **RN01** | Ocupação Exclusiva de Mesa: Uma mesa ativa só pode conter uma única comanda aberta por vez. Novas comandas só podem ser abertas após o fechamento da anterior. Importância: Evita conflitos de lançamento e garante a precisão no atendimento ao cliente. | Alta | 
+| **RN02** | Congelamento do Preço no Pedido: O preço unitário do item registrado na tabela Pedido deve ser congelado no ato do lançamento. Alterações futuras no preço base da tabela Menu não podem alterar o histórico de vendas passadas. | Alta |
+| **RN03** | Opcionalidade da Taxa de Serviço: A taxa de serviço de 10% é adicionada por padrão ao valor total da comanda, mas sua cobrança depende da validação do campo booleano taxa_servico_aceita. Importância: Protege o histórico de faturamento contra flutuações futuras de preços no cardápio. | Média |
+| **RN04** | Quitação Obliterante para Fechamento: Uma comanda só pode alterar seu status para "Fechada" se a soma de seus registros na tabela Pagamentos_Comanda for igual ou superior ao valor total final da comanda. Importância: Respeita a legislação de defesa do consumidor (a gorjeta é opcional). | Alta | 
+| **RN05** | Operação de Caixa Vincular: Toda transação de pagamento deve obrigatoriamente estar associada a uma sessão de caixa com status_caixa = 'Aberto' e a um terminal ativo (Caixa_Salao ou Caixa_Delivery). Importância: Evita prejuízos financeiros e furos no caixa da hamburgueria. | Alta | 
+| **RN06** | Apuração de Divergência de Caixa: No fechamento da sessão do caixa, o valor da diferença deve ser calculado automaticamente através da fórmula: [Diferença = saldo_final_informado - saldo_final_calculado]. Importância: Garante a rastreabilidade exata de quem operou o dinheiro. Importância: Assegura o controle de perdas e auditoria financeira.| Alta |
+| **RN07** |Fundo de Reserva Inicial Obrigatório: Toda abertura de sessão de caixa deve registrar um fundo de troco fixo de R$ 150,00. Importância: Assegura liquidez inicial para o troco de clientes no início do turno. | Alta | 
+| **RN08** | Autorização para Cancelamento: O cancelamento de itens lançados em comandas exige permissão de perfil gerencial e registro de justificativa. Importância: Evita fraudes internas, desvios de produtos e controla o estoque de quebras. | Alta | 
+| **RN09** | Validação de Área e Taxa de Delivery: Pedidos de entrega externa devem validar o endereço do cliente e calcular a taxa de frete correspondente. Importância: Garante a viabilidade logística e o preço justo de entrega por região. | Alta | 
+| **RN10** | Baixa Automática por Ficha Técnica: A venda de um produto deve disparar a baixa no estoque de todos os insumos vinculados à sua ficha técnica. Importância: Mantém o inventário real atualizado e evita rupturas de matéria-prima. | Alta | 
+| **RN11** | Restrição Fiscal (Emissão de Cupom/Nota Fiscal): Toda transação de venda encerrada deve gerar obrigatoriamente um registro fiscal para apuração de tributos. Importância: Atende às exigências da legislação tributária e fiscal vigente. | Alta | 
+| **RN12** | Restrição Sanitária (Controle de Manipulação): O sistema deve registrar e monitorar lotes e validades de insumos artesanais produzidos no turno da manhã. Importância: Cumpre as normas da vigilância sanitária para manipulação de alimentos perecíveis (carnes e molhos). | Alta | 
+| **RN13** | Restrição Trabalhista e LGPD (Proteção de Dados): Dados cadastrais e documentos (CPF) de funcionários e clientes devem ser armazenados com restrição de acesso. Importância: Garante a conformidade com a Lei Geral de Proteção de Dados (LGPD) e leis trabalhistas. | Alta | 
+
+### **Justificativa:**
+
+Para garantir a máxima aderência à realidade do mercado, Novamente foi utilizado a Inteligência Artificial (Gemini) em uma pesquisa de benchmarking para mapear as regras de negocio padrão de uma hamburgueria artesanal: De acordo com o resposta da IA, todas regras que uma Hamburgueria possui, está presente nesta seção. O conjunto de regras de negócio foi estruturado para abranger integralmente o ciclo de vida operacional da hamburgueria artesanal, Adicionalmente, foram incorporadas restrições organizacionais e normativas cruciais — como a obrigatoriedade fiscal, as normas sanitárias de manipulação de insumos e as diretrizes de privacidade de dados (LGPD). Essa amplitude garante que o banco de dados não apenas processe transações, mas também assegure a integridade operacional, a auditoria gerencial e a conformidade legal da empresa.
