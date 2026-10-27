@@ -178,7 +178,7 @@ interoperabilidade…)
 ### **Justificativa:**
 Com base no reestudo do escopo operacional e no benchmarking dos processos de uma hamburgueria artesanal, procedemos à seguinte revisão no conjunto de requisitos do sistema:
 
-Inclusão de Novos Requisitos: Foram adicionados novos Requisitos Funcionais (RFs) e Não Funcionais (RNFs) para cobrir integralmente as crises operacionais apontadas no Trabalho (como cadastro de clientes, fichas técnicas e Fornecedor, compras). Sugestões adicionais levantadas na pesquisa de mercado que possuíam equivalência com os itens já existentes foram descartadas para evitar redundâncias na especificação.
+Inclusão de Novos Requisitos: Foram adicionados novos Requisitos Funcionais (RFs) e Não Funcionais (RNFs) para cobrir integralmente as crises operacionais apontadas no Trabalho (como cadastro de clientes, fichas técnicas, Fornecedor e compras). Sugestões adicionais levantadas na pesquisa de mercado que possuíam equivalência com os itens já existentes foram descartadas para evitar redundâncias na especificação.
 
 Refinamento e Adequação de Escopo: O requisito de transferência de mesas foi descontinuado do escopo principal, visto que o foco da modelagem relacional prioriza as transações estruturais de persistência (vendas, caixa, controle de estoque e financeiro), otimizando a abrangência do banco de dados.
 
@@ -201,6 +201,8 @@ Refinamento e Adequação de Escopo: O requisito de transferência de mesas foi 
 | **RN11** | Restrição Fiscal (Emissão de Cupom/Nota Fiscal): Toda transação de venda encerrada deve gerar obrigatoriamente um registro fiscal para apuração de tributos. Importância: Atende às exigências da legislação tributária e fiscal vigente. | Alta | 
 | **RN12** | Restrição Sanitária (Controle de Manipulação): O sistema deve registrar e monitorar lotes e validades de insumos artesanais produzidos no turno da manhã. Importância: Cumpre as normas da vigilância sanitária para manipulação de alimentos perecíveis (carnes e molhos). | Alta | 
 | **RN13** | Restrição Trabalhista e LGPD (Proteção de Dados): Dados cadastrais e documentos (CPF) de funcionários e clientes devem ser armazenados com restrição de acesso. Importância: Garante a conformidade com a Lei Geral de Proteção de Dados (LGPD) e leis trabalhistas. | Alta | 
+| **RN14** |Reposição por Estoque Mínimo: Quando o saldo de um insumo atingir o limite mínimo, o sistema deve sinalizar a necessidade de nova ordem de compra. Importância: Previne a falta de ingredientes essenciais para a produção dos hambúrgueres. | Alta | 
+
 
 ### **Justificativa:**
 
