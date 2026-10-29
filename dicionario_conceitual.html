@@ -271,7 +271,49 @@
     </table>
 </div>
 <p>Processo paralelo, fora do modelo atual: <b>pré-preparo de insumos</b> (manhã, cozinha) e <b>sangria/suprimento</b> (durante o turno). Sangria/suprimento não tem entidade definida <span class="ad">(a confirmar se entra no modelo)</span>.</p>
- 
+
+<h2 id="s3">3. Convenções</h2>
+    <div class="w">
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Valor</th>
+            </tr>
+            <tr>
+                <td>SGBD</td>
+                <td>MySQL 8.0 (relacional, engine InnoDB, com suporte a chaves estrangeiras e transações)</td>
+            </tr>
+            <tr>
+                <td>Collation / charset</td>
+                <td>utf8mb4 / utf8mb4_unicode_ci (acentuação do português, sem diferenciar maiúsculas de minúsculas)</td>
+            </tr>
+            <tr>
+                <td>Notação do modelo</td>
+                <td>Pé de Galinha (Crow's Foot), com cardinalidade registrada no formato (mín,máx)</td>
+            </tr>
+            <tr>
+                <td>Nomes de entidades</td>
+                <td>Primeira letra maiúscula, partes separadas por “_” (ex.: Ficha_Tecnica)</td>
+            </tr>
+            <tr>
+                <td>Nomes de atributos</td>
+                <td>minúsculas com “_” (ex.: taxa_servico_aceita, status_caixa)</td>
+            </tr>
+            <tr>
+                <td>Prefixos</td>
+                <td>Tabelas <code>tb_</code> (ex.: tb_comanda); colunas de chave primária e estrangeira <code>id_</code> (a FK usa o mesmo nome da PK referenciada); restrições <code>pk_</code>, <code>fk_</code>, <code>uq_</code> e <code>ck_</code>; índices <code>idx_</code> (ex.: idx_pedido_id_comanda)</td>
+            </tr>
+            <tr>
+                <td>Versão</td>
+                <td>0.2 (preliminar) – 28/10/2026. Histórico: 0.1 (tabela de relacionamentos e localização); 0.2 (itens 1 a 6 e convenções).</td>
+            </tr>
+            <tr>
+                <td>Legenda</td>
+                <td>PK = chave primária; FK = chave estrangeira; N = aceita nulo; S = obrigatório; tamanhos físicos <span class="ad">a definir</span> conforme SGBD</td>
+            </tr>
+            
+        </table>
+    </div>
  
 <h2 id="s3">3. Dicionário por entidade</h2>
 <p>Atributos derivados dos requisitos RF01–RF07 e regras RN01–RN06. Tipos são lógicos.</p>
