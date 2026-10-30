@@ -114,14 +114,19 @@ A escolha da unidade São Mateus da Mont Ararat Burger House justifica-se pelo a
 -------------------------------------------------------------------------
 
 # **2. Processos de Negócio**
-
+ 
 ### **Principais Processos Mapeados**
-* **Pré-preparo e Produção de Insumos (Turno da Manhã)**: Manipulação de insumos artesanais (moagem de carnes de 180g e 120g, preparo de molhos da casa, corte de vegetais, porcionamento).
-* **Abertura e Operação de Caixa:** Abertura de sessões por terminal (Salão/Delivery) com registro de fundo de reserva (R$150,00) e atribuição de operador.
-* **Atendimento de Salão e Gestão de Comandas**: Abertura de comanda associada à mesa, lançamento progressivo de itens por garçom e controle de transferência entre mesas.
-* **Produção na Cozinha (Chapa/Montagem)**: Recebimento dos itens de pedidos fracionados por comanda, controle de observações (ponto de carne, remoção de itens)
-* **Fechamento de Conta e Recebimento Fracionado**: Consolidação do consumo, aplicação/isenção opcional da taxa de serviço de 10%, registros de pagamentos fracionados (N formas de pagamento) e encerramento da comanda com liberação da mesa.
-* **Controle Financeiro e Fechamento de Turno**: Apuração das entradas por meio de pagamento, registro de sangrias/suprimentos, conferência de divergências de caixa e fechamento do turno.
+ 
+* **Pré-preparo e Produção de Insumos (Turno da Manhã):** manipulação de insumos artesanais (moagem de carnes de 180g e 120g, preparo de molhos da casa, corte de vegetais, porcionamento).
+* **Abertura e Operação de Caixa:** abertura de sessões por terminal (Salão e Delivery/Balcão) com registro de fundo de reserva (R$ 150,00) e atribuição de operador.
+* **Atendimento de Salão e Gestão de Comandas:** abertura de comanda associada à mesa, lançamento progressivo de itens por garçom e controle de transferência entre mesas.
+* **Atendimento de Delivery e Balcão:** registro do pedido, envio para a cozinha e entrega ou retirada. É o canal de maior volume de vendas da unidade.
+* **Produção na Cozinha (Chapa/Montagem):** recebimento dos itens do pedido por comanda e controle de observações (ponto da carne, remoção de itens).
+* **Cancelamento e Estorno de Itens:** retirada de item lançado por erro ou desistência do cliente.
+* **Fechamento de Conta e Recebimento Fracionado:** consolidação do consumo, aplicação ou isenção opcional da taxa de serviço de 10%, registro de pagamentos fracionados (N formas de pagamento) e encerramento da comanda com liberação da mesa.
+* **Controle Financeiro e Fechamento de Turno:** apuração das entradas por forma de pagamento, registro de sangrias e suprimentos, conferência de divergências de caixa e fechamento do turno.
+* **Compras e Recebimento de Insumos:** contagem do estoque, pedido ao fornecedor, recebimento, entrada no estoque e pagamento.
+---
 
 
 -------------------------------------------------------------------------
@@ -183,41 +188,50 @@ interoperabilidade…)
 
 -----------------------
 
-**Regras de Negócio** (regras que devem ser obedecidas pelo sistema)
-
-| Identificador | Descrição de.. | Prioridade | Relacionados |
-|---------------|-----------------|-----------|--------------|
-| **RN01** | Ocupação Exclusiva de Mesa: Uma mesa ativa só pode conter uma única comanda aberta por vez. Novas comandas só podem ser abertas após o fechamento da anterior. | Alta | RF01 |
-| **RN02** | Congelamento do Preço no Pedido: O preço unitário do item registrado na tabela Pedido deve ser congelado no ato do lançamento. Alterações futuras no preço base da tabela Menu não podem alterar o histórico de vendas passadas. | Alta | RF02 |
-| **RN03** | Opcionalidade da Taxa de Serviço: A taxa de serviço de 10% é adicionada por padrão ao valor total da comanda, mas sua cobrança depende da validação do campo booleano taxa_servico_aceita. | Média | RF05 |
-| **RN04** | Quitação Obliterante para Fechamento: Uma comanda só pode alterar seu status para "Fechada" se a soma de seus registros na tabela Pagamentos_Comanda for igual ou superior ao valor total final da comanda. | Alta | RF01, RF04 |
-| **RN05** | Operação de Caixa Vincular: Toda transação de pagamento deve obrigatoriamente estar associada a uma sessão de caixa com status_caixa = 'Aberto' e a um terminal ativo (Caixa_Salao ou Caixa_Delivery). | Alta | RF04, RF06 |
-| **RN06** | Apuração de Divergência de Caixa: No fechamento da sessão do caixa, o valor da diferença deve ser calculado automaticamente através da fórmula: [Diferença = saldo_final_informado - saldo_final_calculado]. | Alta | RF06 |
-
-
-
-# **4. Regras de Negócio:**
-
-**Processo de Negócio — Gestão Integrada de Atendimento e Vendas**
-
-| ID   | Atributo                | Tipo Físico | Obrigatório | Significado                                                                                 | Relevância                                                                    |
-| ---- | ----------------------- | ----------- | ----------- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| PPP | Pré-preparo e Produção  | Processo    | Sim         | Preparação dos insumos utilizados na operação, incluindo carnes, molhos e vegetais.         | Garante que os insumos estejam disponíveis e padronizados para o atendimento. |
-| AC | Abertura de Caixa       | Processo    | Sim         | Início da operação dos terminais, com registro do operador e fundo de reserva de R$ 150,00. | Permite controlar o início da movimentação financeira de cada caixa.          |
-| A_comanda | Abertura de Comanda     | Processo    | Sim         | Criação de uma comanda vinculada a uma mesa ou atendimento.                                 | Permite identificar e controlar o consumo do cliente.                         |
-| RP | Registro de Pedido      | Processo    | Sim         | Registro dos produtos solicitados pelo cliente na comanda.                                  | Garante que os pedidos sejam encaminhados corretamente para produção.         |
-| TM | Transferência de Mesa   | Processo    | Não         | Alteração da mesa associada à comanda quando necessário.                                    | Mantém o controle correto da ocupação e do consumo.                           |
-| PP | Produção do Pedido      | Processo    | Sim         | Preparação dos itens solicitados pela cozinha, considerando observações e alterações.       | Garante que o pedido seja produzido conforme a solicitação do cliente.        |
-| EP | Entrega do Pedido       | Processo    | Sim         | Entrega do pedido preparado ao cliente do salão, balcão ou delivery.                        | Finaliza a etapa operacional do pedido.                                       |
-| FC | Fechamento de Conta     | Processo    | Sim         | Consolidação dos itens consumidos e cálculo do valor final da comanda.                      | Permite determinar o valor devido pelo cliente.                               |
-| TX | Taxa de Serviço         | Informação  | Não         | Registro da aplicação ou isenção da taxa de serviço de 10%.                                 | Permite controlar corretamente o valor final da conta.                        |
-| PAGAMENTO | Pagamento               | Processo    | Sim         | Registro do recebimento da conta por uma ou mais formas de pagamento.                       | Garante o controle das receitas e possibilita pagamentos fracionados.         |
-| EC | Encerramento de Comanda | Processo    | Sim         | Finalização da comanda após a confirmação do pagamento e liberação da mesa.                 | Mantém o controle das mesas e dos atendimentos concluídos.                    |
-| SUPRI. | Sangria/Suprimento      | Processo    | Não         | Registro de retiradas ou entradas de valores no caixa durante o turno.                      | Auxilia na conferência e controle da movimentação financeira.                 |
-| FT | Fechamento de Turno     | Processo    | Sim         | Conferência das movimentações financeiras e encerramento do caixa.                          | Permite identificar divergências e validar os valores movimentados.           |
-| CD | Controle de Delivery    | Processo    | Sim         | Gerenciamento dos pedidos realizados pelo canal de delivery.                                | Controla um dos principais canais de vendas da operação.                      |
-| CO | Controle de Ocupação    | Processo    | Sim         | Gerenciamento das mesas disponíveis, ocupadas e liberadas.                                  | Permite administrar as 30 mesas e melhorar o fluxo de atendimento.            |
-
+# **4. Regras de Negócio**(regras que devem ser obedecidas pelo sistema)
+ 
+## **4.1 Catálogo de Processos de Negócio**
+ 
+Detalhamento dos processos da seção 2. A coluna "Processo macro" indica a qual grupo da seção 2 cada processo pertence.
+ 
+| ID | Processo | Processo macro (seção 2) | Categoria | Obrigatório | Significado | Relevância |
+| ---- | -------- | ------------------------ | --------- | ----------- | ----------- | ---------- |
+| PN01 | Pré-preparo e Produção | Pré-preparo e Produção de Insumos | Produção | Sim | Preparação dos insumos da operação: carnes, molhos e vegetais. | Garante insumos disponíveis e padronizados para o atendimento. |
+| PN02 | Abertura de Caixa | Abertura e Operação de Caixa | Financeiro | Sim | Início da operação de cada terminal, com registro do operador e do fundo de reserva de R$ 150,00. | Controla o início da movimentação financeira de cada caixa. |
+| PN03 | Abertura de Comanda | Atendimento de Salão | Atendimento | Sim | Criação de uma comanda vinculada a uma mesa ou atendimento. | Identifica e controla o consumo do cliente. |
+| PN04 | Controle de Ocupação | Atendimento de Salão | Atendimento | Sim | Gerenciamento do status das 30 mesas: livre, ocupada e aguardando pagamento. | Permite administrar o salão e melhorar o fluxo de atendimento. |
+| PN05 | Registro de Pedido | Atendimento de Salão | Atendimento | Sim | Lançamento dos produtos solicitados na comanda, com quantidade, observações e preço unitário. | Garante que os pedidos sejam encaminhados corretamente para produção. |
+| PN06 | Transferência de Mesa | Atendimento de Salão | Atendimento | Não | Troca da mesa associada à comanda, levando os itens acumulados. | Mantém o controle correto da ocupação e do consumo. |
+| PN07 | Atendimento de Delivery e Balcão | Atendimento de Delivery e Balcão | Atendimento | Sim | Registro e acompanhamento dos pedidos dos canais delivery e balcão, atendidos pelo Caixa 02. | Controla o canal de maior volume de vendas da unidade. |
+| PN08 | Produção do Pedido | Produção na Cozinha | Produção | Sim | Preparação dos itens pela cozinha, considerando observações como ponto da carne e remoção de ingredientes. | Garante que o pedido seja produzido conforme a solicitação do cliente. |
+| PN09 | Entrega do Pedido | Produção na Cozinha | Produção | Sim | Entrega do pedido pronto ao cliente do salão, ao balcão ou ao entregador. | Finaliza a etapa operacional do pedido. |
+| PN10 | Cancelamento e Estorno de Itens | Cancelamento e Estorno de Itens | Atendimento | Não | Retirada de item lançado por erro ou desistência do cliente. Regras de autorização a definir. | Evita cobrança indevida e permite rastrear perdas. |
+| PN11 | Fechamento de Conta | Fechamento de Conta e Recebimento Fracionado | Financeiro | Sim | Consolidação dos itens consumidos, aplicação ou isenção da taxa de serviço de 10% e cálculo do valor final. | Determina o valor devido pelo cliente. |
+| PN12 | Pagamento | Fechamento de Conta e Recebimento Fracionado | Financeiro | Sim | Registro do recebimento por uma ou mais formas de pagamento (Dinheiro, Cartão, PIX). | Controla as receitas e permite a divisão da conta. |
+| PN13 | Encerramento de Comanda | Fechamento de Conta e Recebimento Fracionado | Atendimento | Sim | Finalização da comanda após a quitação e liberação da mesa. | Mantém o controle das mesas e dos atendimentos concluídos. |
+| PN14 | Sangria/Suprimento | Controle Financeiro e Fechamento de Turno | Financeiro | Não | Registro de retiradas ou entradas de valores no caixa durante o turno. | Auxilia a conferência da movimentação financeira. |
+| PN15 | Fechamento de Turno | Controle Financeiro e Fechamento de Turno | Financeiro | Sim | Conferência das movimentações e encerramento do caixa, com cálculo da divergência. | Identifica divergências e valida os valores movimentados. |
+| PN16 | Compras e Recebimento de Insumos | Compras e Recebimento de Insumos | Compras e Estoque | Sim | Pedido de compra ao fornecedor, lançamento dos itens, recebimento e controle do pagamento ao fornecedor. | Substitui o controle manual por planilhas avulsas. |
+| PN17 | Controle de Estoque | Compras e Recebimento de Insumos | Compras e Estoque | Sim | Contagem dos insumos, entrada pelas compras e baixa pelas vendas com base na ficha técnica. Forma de baixa a definir. | Evita compras imprecisas e custos não contabilizados. |
+| PN18 | Emissão de Documento Fiscal | A definir | Financeiro | A definir | Emissão do documento fiscal da venda. Não apareceu na entrevista. | A confirmar com a gerência. |
+ 
+## **4.2 Regras de Negócio**
+ 
+Situação: **Levantada** (informada na pesquisa de campo), **Proposta** (derivada dos dados e a validar) ou **A definir** (depende da gerência).
+ 
+| ID | Regra | Descrição | Prioridade | Relacionados | Situação |
+| ---- | ----- | --------- | ---------- | ------------ | -------- |
+| RN01 | Ocupação exclusiva de mesa | Uma mesa ativa só pode conter uma única comanda aberta por vez. Novas comandas só podem ser abertas após o fechamento da anterior. | Alta | RF01, PN03, PN04 | Levantada |
+| RN02 | Congelamento do preço no pedido | O preço unitário registrado em `Pedido` é congelado no lançamento. Alterações futuras no preço base de `Menu` não alteram o histórico de vendas. | Alta | RF02, PN05 | Levantada |
+| RN03 | Opcionalidade da taxa de serviço | A taxa de 10% é adicionada por padrão ao total da comanda, mas só é cobrada se `taxa_servico_aceita` for verdadeiro. | Média | RF05, PN11 | Levantada |
+| RN04 | Quitação obrigatória para fechamento | Uma comanda só muda para "Fechada" se a soma de `Pagamentos_Comanda` for igual ou superior ao valor total final. | Alta | RF01, RF04, PN13 | Levantada |
+| RN05 | Vinculação obrigatória do pagamento ao caixa | Todo pagamento deve estar associado a uma sessão de caixa com `status_caixa = 'Aberto'` e a um terminal ativo (`Caixa_Salao` ou `Caixa_Delivery`). | Alta | RF04, RF06, PN12 | Levantada |
+| RN06 | Apuração de divergência de caixa | No fechamento da sessão, `diferenca = saldo_final_informado - saldo_final_calculado`. | Alta | RF06, PN15 | Levantada |
+| RN07 | Identificação do responsável | Toda comanda, pedido e sessão de caixa deve registrar o funcionário responsável, fixo ou freelancer. | Alta | RF07 | Proposta |
+| RN08 | Pedido de compra com fornecedor e itens | Todo pedido de compra deve ter um fornecedor e ao menos um item. Cada item exige quantidade e valor unitário. | Alta | PN16 | Proposta |
+| RN09 | Baixa de estoque pela ficha técnica | A venda de um produto reduz o estoque dos ingredientes conforme a `Ficha_Tecnica`; a compra recebida aumenta o estoque. | Média | PN16, PN17 | Proposta |
+| RN10 | Autorização de cancelamento | Cancelamento de item lançado: quem autoriza e até quando é permitido. | Média | PN10 | A definir |
+| RN11 | Documento fiscal | Regra de emissão do documento fiscal por venda. | A definir | PN18 | A definir |
 
 -------------------------------------------------------------------------
 
