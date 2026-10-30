@@ -143,7 +143,7 @@ Processos Incluídos (100% das áreas operacionais): Optamos por contemplar a to
 
 -------------------------------------------------------------------------
 
-# Requisitos:
+# 1.1 Requisitos:
 
 **Requisitos Funcionais** (o que o sistema deve fazer?)
 
@@ -226,3 +226,69 @@ Para garantir a máxima aderência à realidade do mercado, Novamente foi utiliz
 | Não há fornecedor nem compra, embora o problema nº 1 da organização seja a gestão de compras | Adição das Entidades: INSUMO, COMPRA, ITEM-COMPRA e FORNECEDOR. | Fundamental para estruturar o módulo de gestão de suprimentos e estoque da Hamburgueria. |
 | Ausência da entidade cliente, o grupo listou como problema Nº 2 a ausência de cadastro de clientes | Adição da Entidade Cliente e atributo Endereço (Logradouro, Bairro, Número, CEP, complemento). | Identificar o comprador, manter histórico de consumo e registar o destino exato para entregas. |
 
+
+#  **1.2 Conversão ao Modelo Lógico**
+
+### **Entidades para Tabelas:**
+- Cada entidade forte identificada no Modelo Conceitual (como CLIENTE, MESA, MENU, FUNCIONARIO, CAIXA, FORNECEDOR, COMPRA e INSUMO) foi diretamente convertida em uma tabela relacional no Modelo Lógico. Os nomes das entidades foram preservados, e suas instâncias do mundo real tornaram-se as linhas (registros) de cada tabela. Entidades Associativas como Item-Pedido, Ficha-Tecnica e Item-Compra se tornaram Tabelas, assim como as entidades normais.
+
+### **Atributos para Colunas:**
+- Os atributos descritivos de cada entidade conceitual tornaram-se as colunas das respectivas tabelas no modelo lógico.
+- Tipagem de Dados: Cada atributo recebeu um tipo de dado compatível com o SGBD (ex: INT para identificadores e números inteiros, VARCHAR para campos com caracteres definidos, como CPF, Telefone e CNPJ, DATE para datas, DATETIME para horários, e FLOAT para valores monetários e Quantidades).
+-- Atributos Compostos: O atributo Endereço da entidade CLIENTE foi desmembrado em colunas atômicas individuais (Logradouro, Numero, Bairro, Complemento, CEP), atendendo rigorosamente à 1ª Forma Normal (1FN).
+
+### **Relacionamentos para Chaves:**
+- Os Atributos Identificadores ( círculo preenchido ) de cada entidade se tornou as chaves primárias de cada tabela, exceto das entidades associativas.
+- Os relacionamentos binários foram traduzidos para o modelo relacional através da propagação de Chaves Estrangeiras.
+- Nos relacionamentos de 1 para N, a Chave Primária (PK) da tabela do lado "1" é copiada para a tabela do lado "N", onde passa a atuar como uma Chave Estrangeira (FK). Isso cria o elo entre os registros das duas tabelas.
+- Exemplo FUNCIONÁRIO -> PEDIDOS (0:N): Um funcionário faz vários pedidos. A chave primária ID_FUNCIONARIO da tabela FUNCIONÁRIO foi inserida como chave estrangeira idFUNCIONÁRIO (FK) dentro da tabela PEDIDOS. Assim, cada pedido sabe exatamente qual funcionário o atendeu.
+- Nos relacionamentos de 1 para 1, a Chave Primária de uma das tabelas é inserida como Chave Estrangeira na outra tabela.
+- Exemplo CLIENTE -> COMANDA (0:1): Cada cliente tem sua comanda, e sem um cliente não existe comanda. O ID_CLIENTE foi inserido como idCLIENTE (FK) dentro da tabela COMANDAS.
+
+
+### **Cardinalidades e Tratamento de Tabelas Associativas**
+- Relacionamentos 1:1 (Um para Um): A chave primária de uma das tabelas migrou como chave estrangeira para a outra tabela envolvida, garantindo o vínculo exclusivo.
+- Relacionamentos 1:N (Um para Muitos): A chave primária do lado "1" foi inserida como chave estrangeira na tabela do lado "N" (ex: um FUNCIONARIO gerencia vários PEDIDOS, logo idFUNCIONARIO foi para a tabela PEDIDOS).
+- Relacionamentos N:N (Muitos para Muitos) e Tabelas Associativas: Como no modelo relacional não suporta diretamente relações N:N, elas foram transformadas em tabelas associativas) no modelo lógico. Cada tabela associativa recebeu as chaves estrangeiras das duas tabelas ligadas.
+- ITEM-PEDIDO: Conecta PEDIDOS e MENU (com os atributos descritivos Quantidade, Valor_Unitario e Observacao).
+- FICHA-TECNICA: Conecta MENU e INSUMO (detalhando os ingredientes de cada prato).
+- ITEM-COMPRA: Conecta COMPRA e INSUMO (registrando os itens adquiridos por nota fiscal).
+
+# **1.3 Definição de Chaves Primárias e Estrangeiras**
+
+| TABELA | PK | FK | 
+|---------------|-----------------|------------|
+| Cliente | CPF_Cliente | Sem FKs |
+| Cliente_Telefone | CPF_Cliente | CPF_Cliente |
+| Mesa | ID_Mesa | Sem FKs |
+| Comanda | ID_Comanda | idMESA, idCLIENTE |
+| Pedidos | ID_Pedido | idCOMANDA, idFUNCIONARIO |
+| Entrega | ID_Entrega | idCOMANDA |
+| Cupom_Fiscal | ID_Cupom | idCOMANDA |
+| Pagamentos | ID_Pagamentos | Sem FKs |
+| Caixa | ID_Caixa | idFUNCIONARIO, idPAGAMENTOS |
+| Funcionario | ID_Funcionario | Sem FKs |
+| Item_Pedido | Sem PKs | idPEDIDO, idPRODUTO |
+| Menu | ID_Menu | Sem FKs |
+| Ficha_Tecnica| Sem PKs | idPRODUTO, idINSUMO |
+| Item_Compra | Sem PKs | idCOMPRA, idINSUMO |
+| Compra | ID_Compra | idFORNECEDOR |
+| Fornecedor | ID_Fornecedor | Sem FKs |_
+
+# **1.4 Normalização**
+
+1°FN:
+- Atributo Composto: O atributo Endereço originalmente contida na entidade CLIENTE foi desmembrado em subpartes atômicas e independentes: Logradouro, Número, Bairro, Complemento e CEP.
+- Atributos Multivalorados: Como um cliente pode possuir mais de um número de contato, o campo de telefone foi isolado criando-se a entidade fraca/associativa Cliente_Telefone, garantindo que cada coluna armazene apenas um valor atômico indivisível por registro.
+- A 1FN assegura que todos os atributos sejam atômicos e que não existam grupos repetitivos ou multivalorados na mesma tabela, padronizando as consultas e o armazenamento.
+
+2°FN:
+- Para resolver os relacionamentos de Muitos-for-Muitos (N:N) — que geram dependências parciais se mantidos na mesma tabela —, foram criadas entidades associativas no modelo conceitual e convertidas em tabelas lógicas compostas por chaves estrangeiras:
+- ITEM-PEDIDO: Relaciona PEDIDOS e MENU.
+- FICHA-TECNICA: Relaciona MENU e INSUMO.
+- ITEM-COMPRA: Relaciona COMPRA e INSUMO.
+- A 2FN elimina a redundância associada a chaves compostas parciais, garantindo que atributos descritivos (como Quantidade ou Valor_Unitario) dependam exclusivamente da chave primária composta da tabela associativa correspondente.
+
+3°FN: 
+- O isolamento de entidades como FORNECEDOR, FUNCIONARIO, CAIXA e MESA assegurou que dados específicos de entidades secundárias não ficassem transitivamente acoplados (por exemplo, dados de contato do fornecedor pertencem exclusivamente à tabela FORNECEDOR e não se misturam com os dados da COMPRA).
+- A 3FN blinda o banco de dados contra anomalias de atualização, assegurando que cada dado esteja estritamente no seu lugar de origem e dependa apenas da chave primária da tabela onde está alocado.
