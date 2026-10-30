@@ -215,7 +215,7 @@ Para garantir a máxima aderência à realidade do mercado, Novamente foi utiliz
 
 # **Modelo Conceitual (DER)**
 
-### **DER:** https://github.com/Veigasz/modelagem-de-banco-de-dados/blob/409ee1dd811cae4538f3e03d395a52e48d96a2cd/ModeloConceitual.png
+### **DER:**
 
 **Software**: O Modelo Conceitual foi feito a partir do BRmodelo, por sua notação já ser recomenda nas instruções do professor.
 
