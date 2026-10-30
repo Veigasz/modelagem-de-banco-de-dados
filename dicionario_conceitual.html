@@ -130,6 +130,21 @@
             <td>Associativa</td>
             <td>Pagamento parcial ou total de uma comanda, vinculado ao Caixa (Comanda × Caixa).</td>
         </tr>
+        <tr>
+            <td>Fornecedores</td>
+            <td>Forte</td>
+            <td>Empresa que vende insumos e embalagens à hamburgueria (carnes, pães, hortifruti, embalagens).</td>
+        </tr>
+        <tr>
+            <td>Pedido_Compra</td>
+            <td>Dependente</td>
+            <td>Pedido de compra feito a um fornecedor, com data e status de pagamento. Não confundir com Pedido, que é o item consumido na comanda.</td>
+        </tr>
+        <tr>
+            <td>Item_Pedido_Compra</td>
+            <td>Associativa</td>
+            <td>Insumo comprado em um pedido de compra (Pedido_Compra × Ingredientes), com quantidade e valor unitário. Alimenta o estoque.</td>
+        </tr>
     </table>
 </div>
  
@@ -197,6 +212,21 @@
             <td>Caixa</td>
             <td>(1,1) : (0,N) — Cada sessão de caixa tem um operador; um funcionário pode operar várias sessões.</td>
         </tr>
+        <tr>
+            <td>Fornecedores</td>
+            <td>Pedido_Compra</td>
+            <td>(1,1) : (0,N) — Um fornecedor recebe vários pedidos de compra; cada pedido é de um fornecedor.</td>
+        </tr>
+        <tr>
+            <td>Pedido_Compra</td>
+            <td>Item_Pedido_Compra</td>
+            <td>(1,1) : (1,N) — Um pedido de compra tem vários itens; cada item pertence a um pedido.</td>
+        </tr>
+        <tr>
+            <td>Ingredientes</td>
+            <td>Item_Pedido_Compra</td>
+            <td>(1,1) : (0,N) — Um insumo pode ser comprado em vários pedidos, tratado aqui como Ingredientes.</td>
+        </tr>
     </table>
 </div>
  
@@ -246,19 +276,22 @@
         <tr>
             <td>6</td>
             <td>Fechamento de conta</td>
-            <td>Caixa</td><td>Pedido</td>
+            <td>Caixa</td>
+            <td>Pedido</td>
             <td>Comanda (subtotal, taxa_servico_aceita, valor total)</td>
         </tr>
         <tr>
             <td>7</td>
             <td>Recebimento fracionado</td>
-            <td>Caixa</td><td>Comanda, Caixa</td>
+            <td>Caixa</td>
+            <td>Comanda, Caixa</td>
             <td>Pagamentos_Comanda (N formas de pagamento)</td>
         </tr>
         <tr>
             <td>8</td>
             <td>Encerramento de comanda</td>
-            <td>Caixa</td><td>Pagamentos_Comanda</td>
+            <td>Caixa</td>
+            <td>Pagamentos_Comanda</td>
             <td>Comanda.status = Fechada; Mesas.status = Livre (RN04)</td>
         </tr>
         <tr>
@@ -272,6 +305,53 @@
 </div>
 <p>Processo paralelo, fora do modelo atual: <b>pré-preparo de insumos</b> (manhã, cozinha) e <b>sangria/suprimento</b> (durante o turno). Sangria/suprimento não tem entidade definida <span class="ad">(a confirmar se entra no modelo)</span>.</p>
 
+<h3>Fluxo de compras e estoque</h3>
+    <div class="w">
+        <table>
+            <tr>
+                <th>Etapa</th>
+                <th>Processo</th>
+                <th>Responsável</th>
+                <th>Dados gravados</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Contagem manual do estoque (lista de compras)</td>
+                <td>Encarregado/Gerência</td>
+                <td>Ingredientes.estoque_atual</td>
+            </tr>
+            <tr>
+                <td>2</td><td>Pedido de compra ao fornecedor</td>
+                <td>Encarregado/Gerência</td>
+                <td>Pedido_Compra (data_pedido, status_pagamento = Pendente)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Lançamento dos itens comprados</td>
+                <td>Encarregado/Gerência</td>
+                <td>Item_Pedido_Compra (quantidade, valor_unitario)</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Recebimento e entrada no estoque</td>
+                <td class="ad">a definir</td>
+                <td>Ingredientes.estoque_atual</td>
+        </tr>
+            <tr>
+                <td>5</td>
+                <td>Pagamento ao fornecedor</td>
+                <td class="ad">a definir</td>
+                <td>Pedido_Compra.status_pagamento</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Baixa do estoque pelas vendas, via Ficha_Tecnica</td>
+                <td>Sistema</td>
+                <td>Ingredientes.estoque_atual</td>
+            </tr>
+            
+        </table>
+    </div>
 <h2 id="s3">3. Convenções</h2>
     <div class="w">
         <table>
@@ -309,7 +389,7 @@
             </tr>
             <tr>
                 <td>Legenda</td>
-                <td>PK = chave primária; FK = chave estrangeira; N = aceita nulo; S = obrigatório; tamanhos físicos <span class="ad">a definir</span> conforme SGBD</td>
+                <td>PK = chave primária; FK = chave estrangeira; N = aceita nulo; S = obrigatório; tamanhos físicos conforme SGBD</td>
             </tr>
             
         </table>
@@ -621,12 +701,12 @@
             <td>unidade_medida</td><td>Enum</td>
             <td>N</td>
             <td></td>
-            <td>g, kg, ml, un <span class="ad">(proposta)</span></td>
+            <td>g, kg, ml, un (proposta)</td>
         </tr>
         <tr>
             <td>estoque_atual</td>
             <td>Decimal</td><td>S</td>
-            <td></td><td>Substitui a contagem manual em planilha <span class="ad">(proposta)</span></td>
+            <td></td><td>Substitui a contagem manual em planilha. Entra pelas compras (Item_Pedido_Compra) e sai pelas vendas (Ficha_Tecnica) (proposta)</span></td>
         </tr>
     </table>
 </div>
@@ -836,7 +916,175 @@
         </tr>
     </table>
 </div>
- 
+
+<h3>Fornecedores</h3>
+<span class="expr">Fornecedores(<u>id</u>, nome, cnpj, telefone, email, cidade, estado)</span>
+    <div class="w">
+        <table>
+            <tr>
+                <th>Atributo</th>
+                <th>Tipo</th>
+                <th>Nulo</th>
+                <th>Chave</th>
+                <th>Descrição / valores</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>INT</td>
+                <td>N</td>
+                <td>PK</td>
+                <td>Identificador único; pela convenção seria <code>id_fornecedor</code>)</td>
+            </tr>
+            <tr>
+                <td>nome</td>
+                <td>VARCHAR(100)</td>
+                <td>N</td>
+                <td></td>
+                <td>Razão social ou nome comercial</td>
+            </tr>
+            <tr>
+                <td>cnpj</td>
+                <td>VARCHAR(20)</td>
+                <td>S</td>
+                <td></td>
+                <td>Formato 00.000.000/0000-00</td>
+            </tr>
+            <tr>
+                <td>telefone</td>
+                <td>VARCHAR(20)</td>
+                <td>S</td>
+                <td></td>
+                <td>Formato (11) 0000-0000</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>VARCHAR(100)</td>
+                <td>S</td>
+                <td></td>
+                <td>E-mail comercial</td>
+            </tr>
+            <tr>
+                <td>cidade</td>
+                <td>VARCHAR(60)</td>
+                <td>S</td>
+                <td></td>
+                <td>Município do fornecedor</td>
+            </tr>
+            <tr>
+                <td>estado</td>
+                <td>CHAR(2)</td>
+                <td>S</td>
+                <td></td>
+                <td>UF</td>
+            </tr>
+        </table>
+    </div>
+
+<h3>Item_Pedido_Compra (tabela <code>itens_pedido</code>)</h3>
+<span class="expr">Item_Pedido_Compra(<u>id_item</u>, #id_pedido, #id_produto, quantidade, valor_unitario)</span>
+    <div class="w">
+        <table>
+            <tr>
+                <th>Atributo</th>
+                <th>Tipo</th>
+                <th>Nulo</th>
+                <th>Chave</th>
+                <th>Descrição / valores</th>
+            </tr>
+            <tr>
+                <td>id_item</td>
+                <td>INT</td>
+                <td>N</td>
+                <td>PK</td>
+                <td>Identificador do item</td>
+            </tr>
+            <tr>
+                <td>id_pedido</td>
+                <td>INT</td>
+                <td>N</td>
+                <td>FK</td>
+                <td>Referencia Pedido_Compra(id_pedido)</td>
+            </tr>
+            <tr>
+                <td>id_produto</td>
+                <td>INT</td>
+                <td>N</td>
+                <td>FK</td>
+                <td>Referencia <code>produtos(id)</code>; equivale a Ingredientes (a confirmar)</td>
+            </tr>
+            <tr>
+                <td>quantidade</td>
+                <td>DECIMAL(10,2)</td>
+                <td>N</td>
+                <td></td>
+                <td>Quantidade comprada, na unidade do insumo</td>
+            </tr>
+            <tr>
+                <td>valor_unitario</td>
+                <td>DECIMAL(10,2)</td>
+                <td>N</td>
+                <td></td>
+                <td>Preço pago por unidade; valor do item = quantidade × valor_unitario</td>
+            </tr>
+        </table>
+    </div>
+            <p>O script não traz a tabela <code>produtos</code> nem uma tabela de estoque. O saldo fica em Ingredientes.estoque_atual, e uma tabela de movimentação de estoque ficaria entre o recebimento e as baixas.</p>
+             
+<h3>Massa de dados: fornecedores e pedidos de compra</h3>
+<div class="w">
+    <table>
+        <caption>Total do pedido = soma de quantidade × valor_unitario dos itens. Todos os pedidos têm data 24/10/2026 e status Pendente. Total geral: R$ 4.755,00.</caption>
+        <tr>
+            <th>id</th>
+            <th>Fornecedor</th>
+            <th>CNPJ</th>
+            <th>Cidade/UF</th>
+            <th>Itens</th>
+            <th>Total do pedido</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Burger Prime Distribuidora</td>
+            <td>12.345.678/0001-90</td>
+            <td>São Paulo/SP</td>
+            <td>4</td><td>R$ 828,00</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Pão Dourado Panificadora</td>
+            <td>23.456.789/0001-01</td>
+            <td>Guarulhos/SP</td>
+            <td>2</td>
+            <td>R$ 820,00</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Carnes Selecionadas Ltda.</td>
+            <td>34.567.890/0001-12</td>
+            <td>Osasco/SP</td>
+            <td>3</td>
+            <td>R$ 1.689,00</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Hortifruti Frescor</td>
+            <td>45.678.901/0001-23</td>
+            <td>Santo André/SP</td>
+            <td>3</td>
+            <td>R$ 348,00</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Embala Burger Distribuidora</td>
+            <td>56.789.012/0001-34</td>
+            <td>São Bernardo do Campo/SP</td>
+            <td>3</td>
+            <td>R$ 1.070,00</td>
+        </tr>
+        
+    </table>
+</div>
+    
 <h3>Índices <span class="ad" style="font-size:14px">(proposta)</span></h3>
 <div class="w">
     <table>
@@ -1022,6 +1270,27 @@
                 <td>Pagamentos_Comanda</td>
                 <td>–</td>
                 <td>CR</td>
+                <td>–</td>
+                <td>CRUD</td>
+            </tr>
+            <tr>
+                <td>Fornecedores</td>
+                <td>–</td>
+                <td>–</td>
+                <td>–</td>
+                <td>CRUD</td>
+            </tr>
+            <tr>
+                <td>Pedido_Compra</td>
+                <td>–</td>
+                <td>–</td>
+                <td>–</td>
+                <td>CRUD</td>
+            </tr>
+            <tr>
+                <td>Item_Pedido_Compra</td>
+                <td>–</td>
+                <td>–</td>
                 <td>–</td>
                 <td>CRUD</td>
             </tr>
