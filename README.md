@@ -211,3 +211,16 @@ Refinamento e Adequação de Escopo: O requisito de transferência de mesas foi 
 ### **Justificativa:**
 
 Para garantir a máxima aderência à realidade do mercado, Novamente foi utilizado a Inteligência Artificial (Gemini) em uma pesquisa de benchmarking para mapear as regras de negocio padrão de uma hamburgueria artesanal: De acordo com o resposta da IA, todas regras que uma Hamburgueria possui, está presente nesta seção. O conjunto de regras de negócio foi estruturado para abranger integralmente o ciclo de vida operacional da hamburgueria artesanal, Adicionalmente, foram incorporadas restrições organizacionais e normativas cruciais — como a obrigatoriedade fiscal, as normas sanitárias de manipulação de insumos e as diretrizes de privacidade de dados (LGPD). Essa amplitude garante que o banco de dados não apenas processe transações, mas também assegure a integridade operacional, a auditoria gerencial e a conformidade legal da empresa.
+
+
+# **Modelo Conceitual (DER)**
+
+**Software**: O Modelo Conceitual foi feito a partir do BRmodelo, por sua notação já ser recomenda nas instruções do professor.
+
+| Apontamento E1 | Correção | Por Quê | 
+|---------------|-----------------|------------|
+| Cada relacionamento tem uma única cardinalidade, de um lado só. | Carnalidade Adicionada dos dois lados de cada relacionamento. | Porque elas descrevem as regras de negócio de ambas as direções da relação. | 
+| Há chaves estrangeiras em cinco das nove entidades. | Chaves estrangeiras removidas do modelo conceitual. | Chaves Estrangeiras são representadas no Modelo lógico. |
+| Não há fornecedor nem compra, embora o problema nº 1 da organização seja a gestão de compras | Adição das Entidades: INSUMO, COMPRA, ITEM-COMPRA e FORNECEDOR. | Fundamental para estruturar o módulo de gestão de suprimentos e estoque da Hamburgueria. |
+| Ausência da entidade cliente, o grupo listou como problema Nº 2 a ausência de cadastro de clientes | Adição da Entidade Cliente e atributo Endereço (Logradouro, Bairro, Número, CEP, complemento). | Identificar o comprador, manter histórico de consumo e registar o destino exato para entregas. |
+
